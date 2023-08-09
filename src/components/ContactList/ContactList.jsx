@@ -1,35 +1,44 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AiOutlineUserDelete } from 'react-icons/ai';
 import css from './ContactList.module.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteContact } from 'components/redux/contacts/contactsSlice';
 
-const ContactList = ({ contacts, onDelete }) => {
+const ContactList = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
+  };
+
+  const getVisibleContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  const visibleContacts = getVisibleContacts();
+
   return (
     <ul>
-      {contacts.map(({ id, name, number }) => (
+      {visibleContacts.map(({ id, name, number }) => (
         <li key={id}>
           <p>
             <AiOutlineUserDelete className={css.icon} />
             {name}: {number}
           </p>
-          <button className={css.button} onClick={() => onDelete(id)}>
+          <button
+            className={css.button}
+            onClick={() => handleDeleteContact(id)}
+          >
             Delete
           </button>
         </li>
       ))}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 export default ContactList;
