@@ -2,7 +2,7 @@ import React from 'react';
 import { AiOutlineUserDelete } from 'react-icons/ai';
 import css from './ContactList.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from 'components/redux/contacts/contactsSlice';
+import { deleteContact } from 'redux/contacts/contactsSlice';
 
 const ContactList = () => {
   const dispatch = useDispatch();
